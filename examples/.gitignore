@@ -1,6 +1,8 @@
 # Local plugins mock
 .mock/
 
+# Local lock file (not interesting here)
+
 # Local .terraform directories
 **/.terraform/*
 
