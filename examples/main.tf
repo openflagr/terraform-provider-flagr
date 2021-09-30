@@ -15,5 +15,5 @@ module "ch" {
 }
 
 output "ch" {
-  value = module.ch.flag
+  value = module.ch.filtered_flags
 }

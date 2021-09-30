@@ -1,7 +1,5 @@
-# Local plugins mock
-.mock/
-
 # Local lock file (not interesting here)
+.terraform.lock.hcl
 
 # Local .terraform directories
 **/.terraform/*

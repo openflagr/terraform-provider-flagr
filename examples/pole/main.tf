@@ -2,8 +2,7 @@ terraform {
   required_version = ">= 1.0.0"
   required_providers {
     flagr = {
-      source  = "marceloboeira/flagr"
-      version = "1.0.0"
+      source = "marceloboeira/flagr"
     }
   }
 }
@@ -19,7 +18,7 @@ output "all_flags" {
   value = data.flagr_flags.all.flags
 }
 
-output "flag" {
+output "filtered_flag" {
   value = {
     for flag in data.flagr_flags.all.flags :
     flag.id => flag

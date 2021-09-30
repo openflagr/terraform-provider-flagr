@@ -1,6 +1,5 @@
 # Binaries
-main
-terraform-provider-flagr
+bin/
 
 # Binaries for programs and plugins
 *.exe
