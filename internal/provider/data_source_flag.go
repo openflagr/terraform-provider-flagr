@@ -2,37 +2,24 @@ package provider
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/openflagr/goflagr"
 )
 
 func dataSourceFlags() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceFlagsRead,
 		Schema: map[string]*schema.Schema{
+			// https://github.com/openflagr/goflagr/blob/main/model_flag.go
 			"flags": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						//					"data_records_enabled": &schema.Schema{
-						//						Type:     schema.TypeBool,
-						//						Computed: true,
-						//					},
-						"description": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"enabled": &schema.Schema{
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
 						"id": &schema.Schema{
 							Type:     schema.TypeInt,
 							Computed: true,
@@ -41,34 +28,50 @@ func dataSourceFlags() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"description": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"enabled": &schema.Schema{
+							Type:     schema.TypeBool,
+							Required: true,
+						},
 						"segments": &schema.Schema{
 							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString, // TODO FIX TYPE
 							},
-							Computed: true,
+							Optional: true,
 						},
-						"tags": &schema.Schema{
-							Type: schema.TypeList,
-							Elem: &schema.Schema{
-								Type: schema.TypeString, //TODO FIX TYPE
-							},
-							Computed: true,
-						},
-						//					"updated_at": &schema.Schema{
-						//						Type:         schema.TypeString,
-						//						ValidateFunc: validation.IsRFC3339Time,
-						//						Computed:     true,
-						//					},
 						"variants": &schema.Schema{
 							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString, //TODO FIX TYPE
 							},
-							Computed: true,
+							Optional: true,
 						},
-
-						// TODO ADD notes
+						"data_records_enabled": &schema.Schema{
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"notes": &schema.Schema{
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"created_by": &schema.Schema{
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"updated_by": &schema.Schema{
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						// TODO Fix error
+						// "updated_at": &schema.Schema{
+						// 	Type:         schema.TypeString,
+						// 	ValidateFunc: validation.IsRFC3339Time,
+						// 	Computed:     true,
+						// },
 					},
 				},
 			},
@@ -76,37 +79,38 @@ func dataSourceFlags() *schema.Resource {
 	}
 }
 
-func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	client := &http.Client{Timeout: 10 * time.Second}
+func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interface{}) diag.Diagnostics {
+	client := i.(*goflagr.APIClient)
 
-	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/flags", "http://0.0.0.0:18000/api/v1"), nil)
+	flags, _, err := client.FlagApi.FindFlags(context.TODO(), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	r, err := client.Do(req)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	defer r.Body.Close()
-
-	flags := make([]map[string]interface{}, 0)
-	err = json.NewDecoder(r.Body).Decode(&flags)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	// Keys are currently not matching the expected schema
+	// TODO Move to its own method? FlagToTerraform?
+	// Converting Flag Schema
+	var pF []map[string]interface{}
 	for _, flag := range flags {
-		delete(flag, "updatedAt")
-		delete(flag, "dataRecordsEnabled")
-		delete(flag, "notes")
+		pF = append(pF,
+			map[string]interface{}{
+				"id":                   flag.Id,
+				"key":                  flag.Key,
+				"description":          flag.Description,
+				"enabled":              flag.Enabled,
+				"segments":             flag.Segments,
+				"variants":             flag.Variants,
+				"data_records_enabled": flag.DataRecordsEnabled,
+				"notes":                flag.Notes,
+				"created_by":           flag.CreatedBy,
+				"updated_by":           flag.UpdatedBy,
+				// "updated_at":           flag.UpdatedAt.Format(time.RFC3339),
+			},
+		)
 	}
 
-	if err := d.Set("flags", flags); err != nil {
+	if err := d.Set("flags", pF); err != nil {
 		return diag.FromErr(err)
 	}
 

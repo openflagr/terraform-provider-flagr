@@ -22,6 +22,6 @@ output "filtered_flag" {
   value = {
     for flag in data.flagr_flags.all.flags :
     flag.id => flag
-    if flag.description == var.flag_name
+    if flag.enabled == false
   }
 }

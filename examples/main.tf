@@ -8,6 +8,11 @@ terraform {
   }
 }
 
+provider "flagr" {
+  host = "http://0.0.0.0:18000/"
+  # path = "/api/v1" # Optional
+}
+
 module "ch" {
   source = "./pole"
 
@@ -15,5 +20,5 @@ module "ch" {
 }
 
 output "ch" {
-  value = module.ch.filtered_flags
+  value = module.ch.filtered_flag
 }
