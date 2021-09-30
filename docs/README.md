@@ -1,68 +1,25 @@
 Flagr Terraform Provider
 ==================
+<p align="center" style="display: flex;justify-content: center; align-items: center; height: 200px;">
+    <img src="https://avatars.githubusercontent.com/u/49816112?s=400&v=4" height="100px">        <>
+    <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" height="100px">
+</p>
 
-- Website: https://www.terraform.io
-- [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
-- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
+Welcome to the Flagr Terraform provider! With this provider you can create and manage your flags on [flagr](https://github.com/openflagr/flagr)!
 
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
+To view the full documentation of this provider, we recommend checking the [Terraform Registry](https://registry.terraform.io/providers/marceloboeira/flagr/latest) - Coming soon!
+
+Releases
+---------
+
+Coming soon!
 
 Maintainers
 -----------
 
 This provider plugin is maintained by the [OpenFlagr team](https://github.com/orgs/openflagr/people).
 
-Requirements
+Contributing
 ------------
 
--	[Terraform](https://www.terraform.io/downloads.html) 1.x
--	[Go](https://golang.org/doc/install) 1.17 (to build the provider plugin)
-
-Building The Provider
----------------------
-
-Clone repository to: `$GOPATH/src/github.com/marceloboeira/terraform-provider-flagr`
-
-```sh
-$ mkdir -p $GOPATH/src/github.com/marceloboeira; cd $GOPATH/src/github.com/marceloboeira
-$ git clone git@github.com:marceloboeira/terraform-provider-flagr
-```
-
-Enter the provider directory and build the provider
-
-```sh
-$ cd $GOPATH/src/github.com/marceloboeira/terraform-provider-flagr
-$ make build
-```
-
-Using the provider
-----------------------
-see <https://registry.terraform.io/providers/marceloboeira/flagr/latest/docs>
-
-Developing the Provider
----------------------------
-
-If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.17+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
-
-To compile the provider, run `make build`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
-
-```sh
-$ make bin
-...
-$ $GOPATH/bin/terraform-provider-flagr
-...
-```
-
-In order to test the provider, you can simply run `make test`.
-
-```sh
-$ make test
-```
-
-In order to run the full suite of Acceptance tests, run `make testacc`.
-
-*Note:* Acceptance tests create real resources, and often cost money to run.
-
-```sh
-$ make testacc
-```
+Read our [contributors](https://github.com/marceloboeira/terraform-provider-flagr/docs/CONTRIBUTING.md) guide for more info on contributing.
