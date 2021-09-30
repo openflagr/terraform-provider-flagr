@@ -17,6 +17,11 @@ RELEASE_BIN ?= bin/${VERSION}
 GO_FILES ?= $$(find . -name '*.go')
 TF_EXAMPLES_PATH ?= examples/
 
+## Docker
+DOCKER ?= docker/
+DOCKER_COMPOSE_FILE ?= docker-compose.yaml
+
+
 ## Tests
 TEST ?= $$(go list ./... | grep -v 'vendor')
 
@@ -64,3 +69,7 @@ test: ## Runs tests
 .PHONY: testacc
 testacc: ## Runs acceptance tests
 	TF_ACC=1 go test ${TEST} -v ${TESTARGS} -timeout 120m
+
+.PHONE: compose
+compose: ## Starts test dependencies with docker-compose
+	docker compose -f ${DOCKER}${DOCKER_COMPOSE_FILE} up
