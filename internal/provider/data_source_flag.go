@@ -30,48 +30,46 @@ func dataSourceFlags() *schema.Resource {
 						},
 						"description": &schema.Schema{
 							Type:     schema.TypeString,
-							Required: true,
+							Computed: true,
 						},
 						"enabled": &schema.Schema{
 							Type:     schema.TypeBool,
-							Required: true,
+							Computed: true,
 						},
 						"segments": &schema.Schema{
 							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString, // TODO FIX TYPE
 							},
-							Optional: true,
+							Computed: true,
 						},
 						"variants": &schema.Schema{
 							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString, //TODO FIX TYPE
 							},
-							Optional: true,
+							Computed: true,
 						},
 						"data_records_enabled": &schema.Schema{
 							Type:     schema.TypeBool,
-							Optional: true,
+							Computed: true,
 						},
 						"notes": &schema.Schema{
 							Type:     schema.TypeString,
-							Optional: true,
+							Computed: true,
 						},
 						"created_by": &schema.Schema{
 							Type:     schema.TypeString,
-							Optional: true,
+							Computed: true,
 						},
 						"updated_by": &schema.Schema{
 							Type:     schema.TypeString,
-							Optional: true,
+							Computed: true,
 						},
-						// TODO Fix error
-						// "updated_at": &schema.Schema{
-						// 	Type:         schema.TypeString,
-						// 	ValidateFunc: validation.IsRFC3339Time,
-						// 	Computed:     true,
-						// },
+						"updated_at": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 					},
 				},
 			},
@@ -105,12 +103,13 @@ func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interfac
 				"notes":                flag.Notes,
 				"created_by":           flag.CreatedBy,
 				"updated_by":           flag.UpdatedBy,
-				// "updated_at":           flag.UpdatedAt.Format(time.RFC3339),
+				"updated_at":           flag.UpdatedAt.Format(time.RFC3339),
 			},
 		)
 	}
 
 	if err := d.Set("flags", pF); err != nil {
+		// Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
 		return diag.FromErr(err)
 	}
 

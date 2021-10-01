@@ -38,6 +38,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	rURL := d.Get("host").(string) + d.Get("path").(string)
 	u, err := url.ParseRequestURI(rURL)
 	if err != nil {
+		// Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
 		return nil, diag.FromErr(fmt.Errorf("%s is not a valid URL", rURL))
 	}
 
