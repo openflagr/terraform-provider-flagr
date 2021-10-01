@@ -77,10 +77,8 @@ func dataSourceFlags() *schema.Resource {
 	}
 }
 
-func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interface{}) diag.Diagnostics {
+func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
 	client := i.(*goflagr.APIClient)
-
-	var diags diag.Diagnostics
 
 	flags, _, err := client.FlagApi.FindFlags(context.TODO(), nil)
 	if err != nil {
@@ -116,5 +114,5 @@ func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interfac
 	// always run ??
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 
-	return diags
+	return dg
 }
