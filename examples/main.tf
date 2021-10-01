@@ -13,12 +13,28 @@ provider "flagr" {
   # path = "/api/v1" # Optional
 }
 
-module "ch" {
-  source = "./pole"
 
-  flag_name = "Switzerland"
+// Expects 2 flags to work
+// ID: 1 - Switzerland
+// ID: 2 - Germany
+
+// All flags
+data "flagr_flags" "all" {}
+
+// Specific Flag with ID
+data "flagr_flag" "de" {
+  id = 2
 }
 
+// Invalid Flag (Not found)
+// data "flagr_flag" "invalid" {
+//   id = 666
+// }
+
 output "ch" {
-  value = module.ch.filtered_flag
+  value = element(data.flagr_flags.all.flags, 0).description
+}
+
+output "de" {
+  value = data.flagr_flag.de.description
 }
