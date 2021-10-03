@@ -14,6 +14,16 @@ Releases
 
 Coming soon!
 
+
+### Compatibility Matrix
+
+|   Target                | Provider Version   |
+|------------------------:|:------------------:|
+|                         |       0.0.0        |
+|  openflagr/flagr:1.1.13 | :white_check_mark: |
+|  openflagr/flagr:1.1.12 | :white_check_mark: |
+|     checkr/flagr:1.1.12 | :white_check_mark: |
+
 Maintainers
 -----------
 
