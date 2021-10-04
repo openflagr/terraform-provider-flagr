@@ -75,8 +75,9 @@ func resourceFlag() *schema.Resource {
 func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
 	client := i.(*goflagr.APIClient)
 
-	id, err := strconv.Atoi(d.Id())
+	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
+		// TODO: Improve error message
 		return diag.FromErr(err)
 	}
 
@@ -100,7 +101,7 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 	}
 	for k, v := range m {
 		if err := d.Set(k, v); err != nil {
-			// Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
+			// TODO Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
 			return diag.FromErr(err)
 		}
 	}
