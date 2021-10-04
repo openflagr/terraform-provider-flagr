@@ -13,6 +13,7 @@ import (
 func dataSourceFlags() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceFlagsRead,
+
 		Schema: map[string]*schema.Schema{
 			// https://github.com/openflagr/goflagr/blob/main/model_flag.go
 			"flags": &schema.Schema{

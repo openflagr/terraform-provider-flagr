@@ -25,7 +25,9 @@ func Provider() *schema.Provider {
 			},
 		},
 		ConfigureContextFunc: providerConfigure,
-		ResourcesMap:         map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"flagr_flag": resourceFlag(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"flagr_flag":  dataSourceFlag(),
 			"flagr_flags": dataSourceFlags(),
