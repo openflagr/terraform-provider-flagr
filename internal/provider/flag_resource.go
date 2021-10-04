@@ -121,7 +121,7 @@ func resourceFlagCreate(ctx context.Context, d *schema.ResourceData, i interface
 
 	d.SetId(strconv.FormatInt(flag.Id, 10))
 
-	return dg
+	return resourceFlagRead(ctx, d, i)
 }
 
 func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
