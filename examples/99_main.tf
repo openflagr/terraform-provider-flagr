@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "flagr" {
-  host = "http://0.0.0.0:18000/"
-  # path = "/api/v1" # Optional
+  host = "http://0.0.0.0:18000"
+  path = "/api/v1" # Optional
   # TODO: Authentication
 }

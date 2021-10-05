@@ -122,15 +122,54 @@ func resourceFlagCreate(ctx context.Context, d *schema.ResourceData, i interface
 
 	d.SetId(strconv.FormatInt(flag.Id, 10))
 
-	return resourceFlagRead(ctx, d, i)
+	return resourceFlagUpdate(ctx, d, i)
 }
 
 func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
-	// TODO
-	return dg
+	client := i.(*goflagr.APIClient)
+	id, err := strconv.ParseInt(d.Id(), 10, 64)
+	if err != nil {
+		// TODO: Improve error message
+		return diag.FromErr(err)
+	}
+
+	if d.HasChanges("key", "description", "data_records_enabled", "notes") {
+		_, _, err = client.FlagApi.PutFlag(context.TODO(), id, goflagr.PutFlagRequest{
+			Key:                d.Get("key").(string),
+			Description:        d.Get("description").(string),
+			DataRecordsEnabled: d.Get("data_records_enabled").(bool),
+			Notes:              d.Get("notes").(string),
+		})
+		if err != nil {
+			// TODO: Improve error message
+			return diag.FromErr(err)
+		}
+	}
+
+	if d.HasChange("enabled") {
+		_, _, err = client.FlagApi.SetFlagEnabled(context.TODO(), id, goflagr.SetFlagEnabledRequest{
+			Enabled: d.Get("enabled").(bool),
+		})
+		if err != nil {
+			// TODO: Improve error message
+			return diag.FromErr(err)
+		}
+	}
+
+	return resourceFlagRead(ctx, d, i)
 }
 
 func resourceFlagDelete(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
-	// TODO
+	client := i.(*goflagr.APIClient)
+	id, err := strconv.ParseInt(d.Id(), 10, 64)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	_, err = client.FlagApi.DeleteFlag(context.TODO(), id)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	return dg
 }
