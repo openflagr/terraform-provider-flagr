@@ -15,12 +15,11 @@ RELEASE_BIN ?= bin/${VERSION}
 
 ## Code
 GO_FILES ?= $$(find . -name '*.go')
-TF_EXAMPLES_PATH ?= examples/
+TF_FOLDER ?= examples/
 
 ## Docker
 DOCKER ?= docker/
 DOCKER_COMPOSE_FILE ?= docker-compose.yaml
-
 
 ## Tests
 TEST ?= $$(go list ./... | grep -v 'vendor')
@@ -34,7 +33,7 @@ help: ## Lists the available commands
 .PHONY: format
 format: ## Formats go and terraform code
 	@gofmt -w ${GO_FILES}
-	@terraform fmt -recursive ${TF_EXAMPLES_PATH}
+	@terraform fmt -recursive ${TF_FOLDER}
 
 .PHONY: format build
 build: ## Builds the local architecture binary to the root folder
