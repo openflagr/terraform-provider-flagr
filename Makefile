@@ -58,18 +58,18 @@ release: ## Builds release-binaries for all architectures
 
 .PHONY: install
 install: build ## Builds the local architecture binary and install it on the local terraform cache
-	mkdir -p ${PROVIDER_PATH}
-	cp ${LOCAL_BIN} ${PROVIDER_PATH}/${BINARY}
+	@mkdir -p ${PROVIDER_PATH}
+	@cp ${LOCAL_BIN} ${PROVIDER_PATH}/${BINARY}
 
 .PHONY: test
 test: ## Runs tests
-	go test -i ${TEST} || exit 1
-	echo ${TEST} | xargs -t -n4 go test ${TESTARGS} -timeout=30s -parallel=4
+	@go test -i ${TEST} || exit 1
+	@echo ${TEST} | xargs -t -n4 go test ${TESTARGS} -timeout=30s -parallel=4
 
 .PHONY: testacc
 testacc: ## Runs acceptance tests
-	TF_ACC=1 go test ${TEST} -v ${TESTARGS} -timeout 120m
+	@TF_ACC=1 go test ${TEST} -v ${TESTARGS} -timeout 120m
 
 .PHONE: compose
 compose: ## Starts test dependencies with docker-compose
-	docker compose -f ${DOCKER}${DOCKER_COMPOSE_FILE} up
+	@docker compose -f ${DOCKER}${DOCKER_COMPOSE_FILE} up
