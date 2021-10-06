@@ -35,13 +35,11 @@ func Provider() *schema.Provider {
 	}
 }
 
-func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
+func providerConfigure(ctx context.Context, d *schema.ResourceData) (i interface{}, dg diag.Diagnostics) {
 	rURL := d.Get("host").(string) + d.Get("path").(string)
 	u, err := url.ParseRequestURI(rURL)
 	if err != nil {
-		// Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
+		// TODO Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
 		return nil, diag.FromErr(fmt.Errorf("%s is not a valid URL", rURL))
 	}
 
@@ -50,5 +48,5 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		UserAgent: "Terraform",
 	})
 
-	return c, diags
+	return c, dg
 }
