@@ -10,12 +10,12 @@ clean:
 
 .PHONY: init
 init:
-	terraform init
+	@terraform init
 
 .PHONY: plan
 plan:
-	terraform plan
+	@terraform plan
 
 .PHONY: apply
 apply:
-	terraform apply -auto-approve
+	@terraform apply -auto-approve
