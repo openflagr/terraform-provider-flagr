@@ -81,7 +81,7 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 		return diag.FromErr(err)
 	}
 
-	flag, _, err := client.FlagApi.GetFlag(context.TODO(), int64(id))
+	flag, _, err := client.FlagApi.GetFlag(ctx, int64(id))
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -112,7 +112,7 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 func resourceFlagCreate(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
 	client := i.(*flagr.APIClient)
 
-	flag, _, err := client.FlagApi.CreateFlag(context.TODO(), flagr.CreateFlagRequest{
+	flag, _, err := client.FlagApi.CreateFlag(ctx, flagr.CreateFlagRequest{
 		Description: d.Get("description").(string),
 		Key:         d.Get("key").(string),
 	})
@@ -134,7 +134,7 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 	}
 
 	if d.HasChanges("key", "description", "data_records_enabled", "notes") {
-		_, _, err = client.FlagApi.PutFlag(context.TODO(), id, flagr.PutFlagRequest{
+		_, _, err = client.FlagApi.PutFlag(ctx, id, flagr.PutFlagRequest{
 			Key:                d.Get("key").(string),
 			Description:        d.Get("description").(string),
 			DataRecordsEnabled: d.Get("data_records_enabled").(bool),
@@ -147,7 +147,7 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 	}
 
 	if d.HasChange("enabled") {
-		_, _, err = client.FlagApi.SetFlagEnabled(context.TODO(), id, flagr.SetFlagEnabledRequest{
+		_, _, err = client.FlagApi.SetFlagEnabled(ctx, id, flagr.SetFlagEnabledRequest{
 			Enabled: d.Get("enabled").(bool),
 		})
 		if err != nil {
@@ -166,7 +166,7 @@ func resourceFlagDelete(ctx context.Context, d *schema.ResourceData, i interface
 		return diag.FromErr(err)
 	}
 
-	_, err = client.FlagApi.DeleteFlag(context.TODO(), id)
+	_, err = client.FlagApi.DeleteFlag(ctx, id)
 	if err != nil {
 		return diag.FromErr(err)
 	}
