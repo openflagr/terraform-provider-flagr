@@ -9,6 +9,45 @@ Welcome to the Flagr Terraform provider! With this provider you can create and m
 
 To view the full documentation of this provider, we recommend checking the [Terraform Registry](https://registry.terraform.io/providers/marceloboeira/flagr/latest) - Coming soon!
 
+Usage
+-----
+
+```hcl
+terraform {
+  required_providers {
+    flagr = {
+      source  = "openflagr/flagr"
+      version = "1.0.0"
+    }
+  }
+}
+
+provider "flagr" {
+  ## Flagr Host
+  host = "http://flagr.yourdomain.com:18000"
+  ## Flagr Path - Optional, in case your flagr API runs on a custom path
+  # path = "/api/v1"
+}
+
+# Example key for a release of a new pricing algorithm
+resource "flagr_flag" "pricing-algorithm-v2" {
+  description = "Price Algorithm V2"
+
+  enabled              = true
+  data_records_enabled = true
+
+  variant {
+    key = "pricing-v1"
+    attachment = "pricing:v1"
+  }
+
+  variant {
+    key = "pricing-v2"
+    attachment = "pricing:v2"
+  }
+}
+```
+
 Releases
 ---------
 
