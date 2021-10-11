@@ -10,18 +10,24 @@ import (
 	flagr "github.com/openflagr/goflagr"
 )
 
+const FLAGR_HOST = "FLAGR_HOST"
+const FLAGR_PATH = "FLAGR_PATH"
+
 // Provider -
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"host": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc(FLAGR_HOST, nil),
+				Description: "Host for the flagr API, e.g.: flagr.mycompany.com",
 			},
 			"path": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "/api/v1",
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(FLAGR_PATH, "/api/v1"),
+				Description: "Path for the flagr API, e.g.: /custom/api/v1, default: /api/v1",
 			},
 		},
 		ConfigureContextFunc: providerConfigure,
