@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/openflagr/goflagr"
+	flagr "github.com/openflagr/goflagr"
 )
 
 func dataSourceFlag() *schema.Resource {
@@ -69,7 +69,7 @@ func dataSourceFlag() *schema.Resource {
 }
 
 func dataSourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}) (diags diag.Diagnostics) {
-	client := i.(*goflagr.APIClient)
+	client := i.(*flagr.APIClient)
 
 	flag, _, err := client.FlagApi.GetFlag(context.TODO(), int64(d.Get("id").(int)))
 	if err != nil {

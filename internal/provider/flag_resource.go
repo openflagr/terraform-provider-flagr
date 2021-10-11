@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/openflagr/goflagr"
+	flagr "github.com/openflagr/goflagr"
 )
 
 func resourceFlag() *schema.Resource {
@@ -73,7 +73,7 @@ func resourceFlag() *schema.Resource {
 }
 
 func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
-	client := i.(*goflagr.APIClient)
+	client := i.(*flagr.APIClient)
 
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
@@ -110,9 +110,9 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 }
 
 func resourceFlagCreate(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
-	client := i.(*goflagr.APIClient)
+	client := i.(*flagr.APIClient)
 
-	flag, _, err := client.FlagApi.CreateFlag(context.TODO(), goflagr.CreateFlagRequest{
+	flag, _, err := client.FlagApi.CreateFlag(context.TODO(), flagr.CreateFlagRequest{
 		Description: d.Get("description").(string),
 		Key:         d.Get("key").(string),
 	})
@@ -126,7 +126,7 @@ func resourceFlagCreate(ctx context.Context, d *schema.ResourceData, i interface
 }
 
 func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
-	client := i.(*goflagr.APIClient)
+	client := i.(*flagr.APIClient)
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
 		// TODO: Improve error message
@@ -134,7 +134,7 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 	}
 
 	if d.HasChanges("key", "description", "data_records_enabled", "notes") {
-		_, _, err = client.FlagApi.PutFlag(context.TODO(), id, goflagr.PutFlagRequest{
+		_, _, err = client.FlagApi.PutFlag(context.TODO(), id, flagr.PutFlagRequest{
 			Key:                d.Get("key").(string),
 			Description:        d.Get("description").(string),
 			DataRecordsEnabled: d.Get("data_records_enabled").(bool),
@@ -147,7 +147,7 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 	}
 
 	if d.HasChange("enabled") {
-		_, _, err = client.FlagApi.SetFlagEnabled(context.TODO(), id, goflagr.SetFlagEnabledRequest{
+		_, _, err = client.FlagApi.SetFlagEnabled(context.TODO(), id, flagr.SetFlagEnabledRequest{
 			Enabled: d.Get("enabled").(bool),
 		})
 		if err != nil {
@@ -160,7 +160,7 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 }
 
 func resourceFlagDelete(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
-	client := i.(*goflagr.APIClient)
+	client := i.(*flagr.APIClient)
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
 		return diag.FromErr(err)
