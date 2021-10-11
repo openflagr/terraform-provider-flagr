@@ -1,3 +1,9 @@
+# Environment
+ifneq ("$(wildcard .env)","")
+include .env
+export
+endif
+
 # Global
 ORG ?= marceloboeira
 PROVIDER ?= flagr
@@ -67,7 +73,7 @@ test: ## Runs tests
 
 .PHONY: testacc
 testacc: ## Runs acceptance tests
-	@TF_ACC=1 go test ${TEST} -v ${TESTARGS} -timeout 120m
+	@FLAGR_HOST=${FLAGR_HOST} FLAGR_PATH=${FLAGR_PATH} TF_ACC=1 go test ${TEST} -v ${TESTARGS} -timeout 120m
 
 .PHONE: compose
 compose: ## Starts test dependencies with docker-compose

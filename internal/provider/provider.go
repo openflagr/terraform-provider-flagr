@@ -10,8 +10,14 @@ import (
 	flagr "github.com/openflagr/goflagr"
 )
 
+// FLAGR_HOST - Name of ENV variable to look for flagr host
 const FLAGR_HOST = "FLAGR_HOST"
+
+// FLAGR_PATH - Name of ENV variable to look for flagr path
 const FLAGR_PATH = "FLAGR_PATH"
+
+// FLAGR_AGENT - Static HTTP Agent Name to query flagr instances
+const FLAGR_AGENT = "Terraform"
 
 // Provider -
 func Provider() *schema.Provider {
@@ -49,10 +55,12 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (i interface
 		return nil, diag.FromErr(fmt.Errorf("%s is not a valid URL", rURL))
 	}
 
-	c := flagr.NewAPIClient(&flagr.Configuration{
-		BasePath:  u.String(),
-		UserAgent: "Terraform",
-	})
+	return newAPIClient(u.String()), dg
+}
 
-	return c, dg
+func newAPIClient(url string) *flagr.APIClient {
+	return flagr.NewAPIClient(&flagr.Configuration{
+		BasePath:  url,
+		UserAgent: FLAGR_AGENT,
+	})
 }

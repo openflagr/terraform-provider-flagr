@@ -55,7 +55,7 @@ make test
 
 In order to run the full suite of Acceptance tests, run `make testacc`.
 
-*Note:* Acceptance tests create real resources and often cost money to run, make sure you are pointing it to the correect server.
+**Note**: you need to create the `.env` file following the `.env.example` conventions. The Flagr API Host/Path must be set so that acceptance tests run properly.
 
 ```sh
 make testacc
