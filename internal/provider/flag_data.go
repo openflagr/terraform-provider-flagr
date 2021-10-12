@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -68,12 +69,13 @@ func dataSourceFlag() *schema.Resource {
 	}
 }
 
-func dataSourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}) (diags diag.Diagnostics) {
+func dataSourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}) (dgs diag.Diagnostics) {
 	client := i.(*flagr.APIClient)
+	errMsg := fmt.Sprintf("Unable to read flag %s", d.Get("id"))
 
 	flag, _, err := client.FlagApi.GetFlag(context.TODO(), int64(d.Get("id").(int)))
 	if err != nil {
-		return diag.FromErr(err)
+		return Prettify(dgs, errMsg, err, true)
 	}
 
 	m := map[string]interface{}{
@@ -91,10 +93,9 @@ func dataSourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface
 	}
 	for k, v := range m {
 		if err := d.Set(k, v); err != nil {
-			// Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
-			return diag.FromErr(err)
+			return Prettify(dgs, errMsg, err, false)
 		}
 	}
 
-	return diags
+	return dgs
 }

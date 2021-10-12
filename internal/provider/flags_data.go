@@ -78,12 +78,13 @@ func dataSourceFlags() *schema.Resource {
 	}
 }
 
-func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
+func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interface{}) (dgs diag.Diagnostics) {
 	client := i.(*flagr.APIClient)
+	errMsg := "Unable to find flags"
 
 	flags, _, err := client.FlagApi.FindFlags(ctx, nil)
 	if err != nil {
-		return diag.FromErr(err)
+		return Prettify(dgs, errMsg, err, true)
 	}
 
 	// TODO Move to its own method? FlagToTerraform?
@@ -108,12 +109,11 @@ func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interfac
 	}
 
 	if err := d.Set("flags", pF); err != nil {
-		// Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
-		return diag.FromErr(err)
+		return Prettify(dgs, errMsg, err, false)
 	}
 
 	// always run ??
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 
-	return dg
+	return dgs
 }

@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -151,6 +152,7 @@ func TestAccContactGroup_complete(t *testing.T) {
 
 func TestAccContactGroup_validations(t *testing.T) {
 	t.Parallel()
+	rKey := acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
@@ -166,22 +168,46 @@ func TestAccContactGroup_validations(t *testing.T) {
 				ExpectError: regexp.MustCompile("expected \"description\" to not be an empty string"),
 			},
 			{
-				Config: `
+				Config: fmt.Sprintf(`
 					resource "flagr_flag" "test_a" {
 						description = "[TEST] Duplicated Key 1"
-						key = "a99-11"
+						key = "%s"
 					}
 
 					resource "flagr_flag" "test_b" {
 						description = "[TEST] Duplicated Key 2"
-						key = "a99-11"
+						key = "%s-not-dup"
 					}
-				`,
-				// TODO Improve this error message:
-				// https://github.com/openflagr/flagr/issues/41
-				ExpectError: regexp.MustCompile("Error: 500 Internal Server Error"),
+
+					resource "flagr_flag" "test_c" {
+						description = "[TEST] Duplicated Key 3"
+						key = "%s"
+					}
+				`, rKey, rKey, rKey),
+				ExpectError: regexp.MustCompile("cannot create flag. UNIQUE constraint failed: flags.key"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlagExists("flagr_flag.test"),
+					testAccCheckFlagExists("flagr_flag.test_a"),
+					testAccCheckFlagExists("flagr_flag.test_b"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(`
+					resource "flagr_flag" "test_a" {
+						description = "[TEST] Duplicated Key 1"
+						key = "%s"
+					}
+
+					resource "flagr_flag" "test_b" {
+						description = "[TEST] Duplicated Key 2"
+						key = "%s"
+					}
+				`, rKey, rKey),
+				ExpectError: regexp.MustCompile("UNIQUE constraint failed: flags.key"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFlagExists("flagr_flag.test_a"),
+					testAccCheckFlagExists("flagr_flag.test_b"),
+					resource.TestCheckResourceAttr("flagr_flag.test_a", "key", fmt.Sprintf("%s", rKey)),
+					resource.TestCheckResourceAttr("flagr_flag.test_b", "key", fmt.Sprintf("%s-not-dup", rKey)),
 				),
 			},
 		},

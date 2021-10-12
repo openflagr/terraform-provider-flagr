@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -80,16 +81,16 @@ func resourceFlag() *schema.Resource {
 
 func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
 	client := i.(*flagr.APIClient)
+	errMsg := fmt.Sprintf("Unable to read flag %s", d.Id())
 
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
-		// TODO: Improve error message
-		return diag.FromErr(err)
+		return Prettify(dg, errMsg, err, false)
 	}
 
 	flag, _, err := client.FlagApi.GetFlag(ctx, int64(id))
 	if err != nil {
-		return diag.FromErr(err)
+		return Prettify(dg, errMsg, err, true)
 	}
 
 	m := map[string]interface{}{
@@ -102,8 +103,7 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 	}
 	for k, v := range m {
 		if err := d.Set(k, v); err != nil {
-			// TODO Improve error message: https://learn.hashicorp.com/tutorials/terraform/provider-debug?in=terraform/providers
-			return diag.FromErr(err)
+			return Prettify(dg, errMsg, err, false)
 		}
 	}
 
@@ -112,13 +112,14 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 
 func resourceFlagCreate(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
 	client := i.(*flagr.APIClient)
+	errMsg := fmt.Sprintf("Unable to create flag %s", d.Get("description").(string))
 
 	flag, _, err := client.FlagApi.CreateFlag(ctx, flagr.CreateFlagRequest{
 		Description: d.Get("description").(string),
 		Key:         d.Get("key").(string),
 	})
 	if err != nil {
-		return diag.FromErr(err)
+		return Prettify(dg, errMsg, err, true)
 	}
 
 	d.SetId(strconv.FormatInt(flag.Id, 10))
@@ -128,10 +129,11 @@ func resourceFlagCreate(ctx context.Context, d *schema.ResourceData, i interface
 
 func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
 	client := i.(*flagr.APIClient)
+	errMsg := fmt.Sprintf("Unable to update flag %s", d.Id())
+
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
-		// TODO: Improve error message
-		return diag.FromErr(err)
+		return Prettify(dg, errMsg, err, false)
 	}
 
 	if d.HasChanges("key", "description", "data_records_enabled", "notes") {
@@ -142,7 +144,7 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 			Notes:              d.Get("notes").(string),
 		})
 		if err != nil {
-			return diag.FromErr(err)
+			return Prettify(dg, errMsg, err, true)
 		}
 	}
 
@@ -151,7 +153,7 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 			Enabled: d.Get("enabled").(bool),
 		})
 		if err != nil {
-			return diag.FromErr(err)
+			return Prettify(dg, errMsg, err, true)
 		}
 	}
 
@@ -160,14 +162,16 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 
 func resourceFlagDelete(ctx context.Context, d *schema.ResourceData, i interface{}) (dg diag.Diagnostics) {
 	client := i.(*flagr.APIClient)
+	errMsg := fmt.Sprintf("Unable to delete flag %s", d.Id())
+
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
-		return diag.FromErr(err)
+		return Prettify(dg, errMsg, err, false)
 	}
 
 	_, err = client.FlagApi.DeleteFlag(ctx, id)
 	if err != nil {
-		return diag.FromErr(err)
+		return Prettify(dg, errMsg, err, true)
 	}
 
 	return dg
