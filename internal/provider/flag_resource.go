@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	flagr "github.com/openflagr/goflagr"
 )
 
@@ -30,8 +31,9 @@ func resourceFlag() *schema.Resource {
 				Optional: true,
 			},
 			"description": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"enabled": &schema.Schema{
 				Type:     schema.TypeBool,
@@ -91,17 +93,12 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 	}
 
 	m := map[string]interface{}{
-		/////"id":          id,
-		"key":         flag.Key,
-		"description": flag.Description,
-		"enabled":     flag.Enabled,
-		//"segments":             flag.Segments,
-		//"variants":             flag.Variants,
+		"key":                  flag.Key,
+		"description":          flag.Description,
+		"enabled":              flag.Enabled,
 		"data_records_enabled": flag.DataRecordsEnabled,
 		"notes":                flag.Notes,
-		//	"created_by":           flag.CreatedBy,
-		//  "updated_by": flag.UpdatedBy,
-		"updated_at": flag.UpdatedAt.Format(time.RFC3339),
+		"updated_at":           flag.UpdatedAt.Format(time.RFC3339),
 	}
 	for k, v := range m {
 		if err := d.Set(k, v); err != nil {
@@ -145,7 +142,6 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 			Notes:              d.Get("notes").(string),
 		})
 		if err != nil {
-			// TODO: Improve error message
 			return diag.FromErr(err)
 		}
 	}
@@ -155,7 +151,6 @@ func resourceFlagUpdate(ctx context.Context, d *schema.ResourceData, i interface
 			Enabled: d.Get("enabled").(bool),
 		})
 		if err != nil {
-			// TODO: Improve error message
 			return diag.FromErr(err)
 		}
 	}

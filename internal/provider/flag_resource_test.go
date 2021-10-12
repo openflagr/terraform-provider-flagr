@@ -148,3 +148,42 @@ func TestAccContactGroup_complete(t *testing.T) {
 		},
 	})
 }
+
+func TestAccContactGroup_validations(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		CheckDestroy:      testAccCheckFlagDestroy,
+		ProviderFactories: providerFactory,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+					resource "flagr_flag" "test" {
+						description = ""
+					}
+				`,
+				ExpectError: regexp.MustCompile("expected \"description\" to not be an empty string"),
+			},
+			{
+				Config: `
+					resource "flagr_flag" "test_a" {
+						description = "[TEST] Duplicated Key 1"
+						key = "a99-11"
+					}
+
+					resource "flagr_flag" "test_b" {
+						description = "[TEST] Duplicated Key 2"
+						key = "a99-11"
+					}
+				`,
+				// TODO Improve this error message:
+				// https://github.com/openflagr/flagr/issues/41
+				ExpectError: regexp.MustCompile("Error: 500 Internal Server Error"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFlagExists("flagr_flag.test"),
+				),
+			},
+		},
+	})
+}
