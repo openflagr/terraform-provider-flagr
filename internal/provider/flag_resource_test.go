@@ -3,12 +3,15 @@ package provider
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
+
+const RFC3339 = `^((?:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2}(?:\.\d+)?))(Z|[\+-]\d{2}:\d{2})?)$`
 
 func testAccCheckFlagDestroy(s *terraform.State) error {
 	flags, _, err := APIClient().FlagApi.FindFlags(context.TODO(), nil)
@@ -74,7 +77,72 @@ func TestAccContactGroup_basic(t *testing.T) {
 				`,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlagExists("flagr_flag.test"),
+					// Given attributes
 					resource.TestCheckResourceAttr("flagr_flag.test", "description", "[TEST] Basic"),
+
+					// Default attributes
+					resource.TestCheckResourceAttr("flagr_flag.test", "enabled", "false"),
+					resource.TestCheckResourceAttr("flagr_flag.test", "data_records_enabled", "false"),
+
+					// Computed attributes
+					resource.TestCheckResourceAttrSet("flagr_flag.test", "id"),
+					resource.TestMatchResourceAttr("flagr_flag.test", "updated_at", regexp.MustCompile(RFC3339)),
+				),
+			},
+			{
+				Config: `
+					resource "flagr_flag" "test" {
+						description = "[TEST] Basic - Update 1"
+
+						enabled              = true
+						data_records_enabled = true
+					}
+				`,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFlagExists("flagr_flag.test"),
+					// Given attributes
+					resource.TestCheckResourceAttr("flagr_flag.test", "description", "[TEST] Basic - Update 1"),
+					resource.TestCheckResourceAttr("flagr_flag.test", "enabled", "true"),
+					resource.TestCheckResourceAttr("flagr_flag.test", "data_records_enabled", "true"),
+
+					// Computed attributes
+					resource.TestCheckResourceAttrSet("flagr_flag.test", "id"),
+					resource.TestMatchResourceAttr("flagr_flag.test", "updated_at", regexp.MustCompile(RFC3339)),
+				),
+			},
+		},
+	})
+}
+
+func TestAccContactGroup_complete(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          testAccPreCheck(t),
+		CheckDestroy:      testAccCheckFlagDestroy,
+		ProviderFactories: providerFactory,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+					resource "flagr_flag" "test" {
+						description = "[TEST] Complete"
+
+						enabled = true
+						data_records_enabled = true
+						notes = "Managed by Terraform"
+					}
+				`,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFlagExists("flagr_flag.test"),
+					// Given attributes
+					resource.TestCheckResourceAttr("flagr_flag.test", "description", "[TEST] Complete"),
+					resource.TestCheckResourceAttr("flagr_flag.test", "enabled", "true"),
+					resource.TestCheckResourceAttr("flagr_flag.test", "data_records_enabled", "true"),
+					resource.TestCheckResourceAttr("flagr_flag.test", "notes", "Managed by Terraform"),
+
+					// Computed attributes
+					resource.TestCheckResourceAttrSet("flagr_flag.test", "id"),
+					resource.TestMatchResourceAttr("flagr_flag.test", "updated_at", regexp.MustCompile(RFC3339)),
 				),
 			},
 		},

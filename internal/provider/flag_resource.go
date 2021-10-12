@@ -56,14 +56,15 @@ func resourceFlag() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"created_by": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"updated_by": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
+			/// TODO: Fix this, created by commes from JWT-Token
+			///	"created_by": &schema.Schema{
+			///	"cr	Type:     schema.TypeString,
+			///	"cr	Optional: true,
+			///	"cr},
+			/// "updated_by": &schema.Schema{
+			/// 	Type:     schema.TypeString,
+			/// 	Optional: true,
+			/// },
 			"updated_at": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
@@ -95,9 +96,9 @@ func resourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface{}
 		//"variants":             flag.Variants,
 		"data_records_enabled": flag.DataRecordsEnabled,
 		"notes":                flag.Notes,
-		"created_by":           flag.CreatedBy,
-		"updated_by":           flag.UpdatedBy,
-		"updated_at":           flag.UpdatedAt.Format(time.RFC3339),
+		//	"created_by":           flag.CreatedBy,
+		//  "updated_by": flag.UpdatedBy,
+		"updated_at": flag.UpdatedAt.Format(time.RFC3339),
 	}
 	for k, v := range m {
 		if err := d.Set(k, v); err != nil {
