@@ -16,6 +16,9 @@ func resourceFlag() *schema.Resource {
 		CreateContext: resourceFlagCreate,
 		UpdateContext: resourceFlagUpdate,
 		DeleteContext: resourceFlagDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			//"id": &schema.Schema{
 			//	Type:     schema.TypeInt,
