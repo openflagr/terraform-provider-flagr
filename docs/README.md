@@ -85,6 +85,9 @@ For more insights into what each entity means, please reffer to [openflagr-docs]
 
 | Terraform     |        Entity | Feature           | Status   |
 |--------------:|--------------:|------------------:|:--------:|
+| Provider      |               | URL               |  ✅      |
+|               |               | Path              |  ✅      |
+|               |               | Authentication    |  ⚪️      |
 | Data Source   | Flags         | ReadAll           |  ✅      |
 |               |               | Search            |  ⛔️      |
 |               | Flag          | Read (id)         |  ✅      |
