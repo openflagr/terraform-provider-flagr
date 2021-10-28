@@ -13,6 +13,7 @@ Usage
 -----
 
 ⚠️  The usage represents, as of now, the desired state, not the current state. Below, you are able to see supported features in the feature matrix.
+
 ```hcl
 terraform {
   required_providers {
@@ -38,16 +39,28 @@ resource "flagr_flag" "pricing-algorithm-v2" {
   data_records_enabled = true
 
   variant {
-    key = "pricing-v1"
+    key = "pricing:v1"
     attachment = "pricing:v1"
   }
 
   variant {
-    key = "pricing-v2"
+    key = "pricing:v2"
     attachment = "pricing:v2"
+  }
+
+  segments {
+    description = "All traffic"
+    rollout = 100
+
+    distribution = {
+        "pricing:v1" = 90
+        "pricing:v2" = 10
+    }
   }
 }
 ```
+
+The example above represents a release of a pricing algorithm, it will split the traffic in 2 parts, 90% gets the regular/existing pricing variant (v1) and 10% gets the new pricing (v2).
 
 Releases
 ---------
