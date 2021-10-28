@@ -22,10 +22,10 @@ func resourceFlag() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			//"id": &schema.Schema{
-			//	Type:     schema.TypeInt,
-			//	Computed: true,
-			//},
+			"id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"key": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
