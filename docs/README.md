@@ -27,8 +27,12 @@ terraform {
 provider "flagr" {
   ## Flagr Host
   host = "http://flagr.yourdomain.com:18000"
+
   ## Flagr Path - Optional, in case your flagr API runs on a custom path
   # path = "/api/v1"
+
+  ## Flagr Authentication - Optional, in case your flagr API runs authenticated
+  ## authentication = "..."
 }
 
 # Example key for a release of a new pricing algorithm
@@ -39,19 +43,18 @@ resource "flagr_flag" "pricing-algorithm-v2" {
   data_records_enabled = true
 
   variant {
-    key = "pricing:v1"
+    key        = "pricing:v1"
     attachment = "pricing:v1"
   }
 
   variant {
-    key = "pricing:v2"
+    key        = "pricing:v2"
     attachment = "pricing:v2"
   }
 
   segments {
-    description = "All traffic"
-    rollout = 100
-
+    description  = "All traffic"
+    rollout      = 100
     distribution = {
         "pricing:v1" = 90
         "pricing:v2" = 10
