@@ -62,7 +62,7 @@ func testAccCheckFlagExists(resourceName string) resource.TestCheckFunc {
 	}
 }
 
-func TestAccContactGroup_basic(t *testing.T) {
+func TestAccFlagResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -115,7 +115,7 @@ func TestAccContactGroup_basic(t *testing.T) {
 	})
 }
 
-func TestAccContactGroup_complete(t *testing.T) {
+func TestAccFlagResource_complete(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -150,7 +150,7 @@ func TestAccContactGroup_complete(t *testing.T) {
 	})
 }
 
-func TestAccContactGroup_validations(t *testing.T) {
+func TestAccFlagResource_validations(t *testing.T) {
 	t.Parallel()
 	rKey := acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 
