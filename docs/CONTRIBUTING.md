@@ -35,14 +35,15 @@ make install
 Makefile is your friend:
 
 ```
-make build     Builds the local architecture binary to the root folder
-make compose   Starts test dependencies with docker-compose
-make format    Formats go and terraform code
-make help      Lists the available commands
-make install   Builds the local architecture binary and install it on the local terraform cache
-make release   Builds release-binaries for all architectures
-make test      Runs tests
-make testacc   Runs acceptance tests
+make help        Lists the available commands
+make format      Formats go and terraform code
+make build       Builds the local architecture binary to the root folder
+make install     Builds the local architecture binary and install it on the local terraform cache
+make release     Builds release-binaries for all architectures
+make compose     Starts test dependencies with docker-compose
+make decompose   Stops/destroys all docker dependencies
+make test        Runs tests
+make testacc     Runs acceptance tests
 ```
 
 ## Test suite

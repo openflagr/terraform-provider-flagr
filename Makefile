@@ -34,7 +34,7 @@ default: install
 
 .PHONY: help
 help: ## Lists the available commands
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' ${MAKEFILE_LIST} | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-36s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: format
 format: ## Formats go and terraform code
@@ -78,3 +78,7 @@ testacc: ## Runs acceptance tests
 .PHONE: compose
 compose: ## Starts test dependencies with docker-compose
 	@docker compose -f ${DOCKER}${DOCKER_COMPOSE_FILE} up
+
+.PHONE: decompose
+decompose: ## Stops/destroys all docker dependencies
+	@docker compose  -f ${DOCKER}${DOCKER_COMPOSE_FILE} down
