@@ -63,6 +63,43 @@ Coming soon!
 |  openflagr/flagr:1.1.12 | :white_check_mark: |
 |     checkr/flagr:1.1.12 | :white_check_mark: |
 
+
+Features
+---------
+
+For more insights into what each entity means, please reffer to [openflagr-docs](https://openflagr.github.io/flagr/#/flagr_overview).
+
+| Terraform     |        Entity | Feature           | Status   |
+|--------------:|--------------:|------------------:|:--------:|
+| Data Source   | Flags         | ReadAll           |  ✅      |
+|               |               | Search            |  ⛔️      |
+|               | Flag          | Read (id)         |  ✅      |
+|               |               | Search            |  ⛔️      |
+|               | Variants      | ReadAll (flag-id) |  ⛔️      |
+|               | Variant       | Read (flag-id/id) |  ⛔️      |
+|               | Segments      | ReadAll (flag-id) |  ⛔️      |
+|               | Segment       | Read (flag-id/id) |  ⛔️      |
+| Resource      | Flag          | Read              |  ✅      |
+|               |               | Import            |  ✅      |
+|               |               | Create            |  ✅      |
+|               |               | Update            |  ✅      |
+|               |               | Delete            |  ✅      |
+| Resource      | Variant       | Read              |  [ ]     |
+|               |               | Import            |  [ ]     |
+|               |               | Create            |  [ ]     |
+|               |               | Update            |  [ ]     |
+|               |               | Delete            |  [ ]     |
+| Resource      | Segment       | Read              |  [ ]     |
+|               |               | Import            |  [ ]     |
+|               |               | Create            |  [ ]     |
+|               |               | Update            |  [ ]     |
+|               |               | Delete            |  [ ]     |
+
+* ✅ - Supported
+* ⚠️  - Partially supported / not stable
+* [ ] - Not Supported, part of the roadmap
+* ⛔️ - Not Supported, no plans for now
+
 Maintainers
 -----------
 
