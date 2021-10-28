@@ -12,6 +12,7 @@ To view the full documentation of this provider, we recommend checking the [Terr
 Usage
 -----
 
+⚠️  The usage represents, as of now, the desired state, not the current state. Below, you are able to see supported features in the feature matrix.
 ```hcl
 terraform {
   required_providers {
