@@ -84,21 +84,21 @@ For more insights into what each entity means, please reffer to [openflagr-docs]
 |               |               | Create            |  ✅      |
 |               |               | Update            |  ✅      |
 |               |               | Delete            |  ✅      |
-| Resource      | Variant       | Read              |  [ ]     |
-|               |               | Import            |  [ ]     |
-|               |               | Create            |  [ ]     |
-|               |               | Update            |  [ ]     |
-|               |               | Delete            |  [ ]     |
-| Resource      | Segment       | Read              |  [ ]     |
-|               |               | Import            |  [ ]     |
-|               |               | Create            |  [ ]     |
-|               |               | Update            |  [ ]     |
-|               |               | Delete            |  [ ]     |
+| Resource      | Variant       | Read              |  ⚪️      |
+|               |               | Import            |  ⚪️      |
+|               |               | Create            |  ⚪️      |
+|               |               | Update            |  ⚪️      |
+|               |               | Delete            |  ⚪️      |
+| Resource      | Segment       | Read              |  ⚪️      |
+|               |               | Import            |  ⚪️      |
+|               |               | Create            |  ⚪️      |
+|               |               | Update            |  ⚪️      |
+|               |               | Delete            |  ⚪️      |
 
 * ✅ - Supported
 * ⚠️  - Partially supported / not stable
-* [ ] - Not Supported, part of the roadmap
-* ⛔️ - Not Supported, no plans for now
+* ⚪️ - Not Supported but part of the roadmap
+* ⛔️ - Not Supported & no plans for now
 
 Maintainers
 -----------
