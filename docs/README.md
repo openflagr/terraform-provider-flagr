@@ -113,7 +113,7 @@ For more insights into what each entity means, please reffer to [openflagr-docs]
 |               |               | Import            |  ⚪️      |
 |               |               | Create            |  ⚪️      |
 |               |               | Update            |  ⚪️      |
-|               |               | Delete            |  ⚪️      |
+|               |               |                   |  ⚪️      |
 
 * ✅ - Supported
 * ⚠️  - Partially supported / not stable

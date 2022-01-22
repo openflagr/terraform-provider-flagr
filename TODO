@@ -1,0 +1,23 @@
+
+
+- [x] Make it possible to request all flags
+- [x] Make it possible to request a single flag
+- [x] Make it possible to create a flag
+- [ ] Make ti possible to import a flag
+- [ ] Make it possible to update a flag
+- [ ] Make it possible to delete a flag
+
+- Improve Error Messages
+
+Future
+- Core
+  - Authentication
+  - CreatedBy-Terraform?
+- Terraform Import
+- Makefile
+  - Default Test
+- Docs
+- Test/Spec Setup
+- CI?
+- LICENSE
+p

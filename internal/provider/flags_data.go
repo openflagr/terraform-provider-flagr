@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -22,7 +23,7 @@ func dataSourceFlags() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": &schema.Schema{
-							Type:     schema.TypeInt,
+							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"key": &schema.Schema{
@@ -37,20 +38,20 @@ func dataSourceFlags() *schema.Resource {
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
-						"segments": &schema.Schema{
-							Type: schema.TypeList,
-							Elem: &schema.Schema{
-								Type: schema.TypeString, // TODO FIX TYPE
-							},
-							Computed: true,
-						},
-						"variants": &schema.Schema{
-							Type: schema.TypeList,
-							Elem: &schema.Schema{
-								Type: schema.TypeString, //TODO FIX TYPE
-							},
-							Computed: true,
-						},
+						// "segments": &schema.Schema{
+						// 	Type: schema.TypeList,
+						// 	Elem: &schema.Schema{
+						// 		Type: schema.TypeString, // TODO FIX TYPE
+						// 	},
+						// 	Computed: true,
+						// },
+						// "variants": &schema.Schema{
+						// 	Type: schema.TypeList,
+						// 	Elem: &schema.Schema{
+						// 		Type: schema.TypeString, //TODO FIX TYPE
+						// 	},
+						// 	Computed: true,
+						// },
 						"data_records_enabled": &schema.Schema{
 							Type:     schema.TypeBool,
 							Computed: true,
@@ -93,7 +94,7 @@ func dataSourceFlagsRead(ctx context.Context, d *schema.ResourceData, i interfac
 	for _, flag := range flags {
 		pF = append(pF,
 			map[string]interface{}{
-				"id":                   flag.Id,
+				"id":                   fmt.Sprintf("%d", flag.Id),
 				"key":                  flag.Key,
 				"description":          flag.Description,
 				"enabled":              flag.Enabled,

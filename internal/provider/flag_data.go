@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -17,7 +18,7 @@ func dataSourceFlag() *schema.Resource {
 		// https://github.com/openflagr/goflagr/blob/main/model_flag.go
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Required: true,
 			},
 			"key": &schema.Schema{
@@ -74,13 +75,18 @@ func dataSourceFlagRead(ctx context.Context, d *schema.ResourceData, i interface
 	client := i.(*flagr.APIClient)
 	errMsg := fmt.Sprintf("Unable to read flag %s", d.Get("id"))
 
-	flag, _, err := client.FlagApi.GetFlag(context.TODO(), int64(d.Get("id").(int)))
+	id, err := strconv.ParseInt(d.Id(), 10, 64)
+	if err != nil {
+		return Prettify(dgs, errMsg, err, false)
+	}
+
+	flag, _, err := client.FlagApi.GetFlag(context.TODO(), int64(id))
 	if err != nil {
 		return Prettify(dgs, errMsg, err, true)
 	}
 
 	m := map[string]interface{}{
-		"id":                   flag.Id,
+		"id":                   d.Id(),
 		"key":                  flag.Key,
 		"description":          flag.Description,
 		"enabled":              flag.Enabled,
